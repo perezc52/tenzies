@@ -1,7 +1,7 @@
 # Tenzies
 This is a simple react game using create-react-app for the game tenzies.
 
-![tenzies gif]([https://gfycat.com/narrowpepperyhog](https://github.com/perezc52/tenzies/blob/master/tenziesgif.gif))
+![]([https://gfycat.com/narrowpepperyhog](https://github.com/perezc52/tenzies/blob/master/tenziesgif.gif))
 
 ## How It's Made:
 
