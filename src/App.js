@@ -12,11 +12,10 @@ function allNewDice() {
   for(let i = 0; i < 10; i++) {
     allNewDiceArray.push({
       value: Math.floor(Math.random() * 6) + 1,
-      isHeld: false,
+      isHeld: true,
       id: nanoid()
     })
   }
-  console.log(allNewDiceArray)
   return allNewDiceArray
 }
 
@@ -24,9 +23,15 @@ function rollDice() {
   setDice(allNewDice())
 }
 
+function holdDice(id) {
+  setDice(oldDice => oldDice.map(die => {
+    return die.id === id ? {...die, isHeld: !die.isHeld} : die
+  }))
+}
+
 const diceElements = dice.map((die, i) => {
   return (
-    <Die key={die.id} value={die.value}/>
+    <Die key={die.id} value={die.value} isHeld={die.isHeld} holdDice={() => holdDice(die.id)}/>
   )
 })
 
