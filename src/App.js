@@ -8,6 +8,9 @@ function App() {
 
 const [dice, setDice] = React.useState(allNewDice())
 const [tenzies, setTenzies] = React.useState(false)
+const [rolls, setRolls] = React.useState(0)
+const [time, setTime] = React.useState(0);
+const [running, setRunning] = React.useState(false);
 
 React.useEffect(() => {
   let allDiceHeld = dice.every(die => die.isHeld)
@@ -15,9 +18,22 @@ React.useEffect(() => {
   let allSameValue = dice.every(die => die.value === firstValue)
   if(allDiceHeld && allSameValue) {
     setTenzies(true)
+    setRunning(false)
     console.log("You won!")
   }
 }, [dice])
+
+React.useEffect(() => {  
+  let interval;
+  if (running) {
+  interval = setInterval(() => {
+      setTime((prevTime) => prevTime + 10);
+  }, 10);
+  } else if (!running) {
+      clearInterval(interval);
+  }
+  return () => clearInterval(interval);
+}, [running])
 
 function allNewDice() {
   let allNewDiceArray = []
@@ -37,12 +53,16 @@ function generateNewDie() {
 
 function rollDice() {
   if(!tenzies) {
+    setRunning(true)
     setDice(oldDice => oldDice.map(die => {
       return die.isHeld ? die : generateNewDie()
     }))
+    setRolls(prevRolls => prevRolls + 1)
   }else {
     setTenzies(false)
     setDice(allNewDice())
+    setRolls(0)
+    setTime(0)
   }
 }
 
@@ -64,6 +84,14 @@ const diceElements = dice.map((die, i) => {
         {tenzies && <Confetti />}
         <h1 className="title">Tenzies</h1>
         <p className="instructions">Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
+        <h4>Rolls: {rolls}</h4>
+        <h4>
+          <div className="numbers">
+          <span>Time: {("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
+          <span>{("0" + Math.floor((time / 1000) % 60)).slice(-2)}:</span>
+          <span>{("0" + ((time / 10) % 100)).slice(-2)}</span>
+          </div>
+        </h4>
         <div className="die-container">
           {diceElements}
         </div>
